@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix - Account</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f3f3f3; color: #333; }
+        .account-navbar {
+            background: #000;
+            padding: 0 4%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .account-navbar a { color: #fff; text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
+        .account-navbar .logo img { height: 35px; }
+
+        .account-container {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 20px 4%;
+        }
+
+        .account-header {
+            border-bottom: 1px solid #999;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .account-header h1 { font-size: 2.2rem; font-weight: 500; margin: 0; }
+        .member-since { color: #555; font-size: 0.9rem; font-weight: bold; margin-left: auto; }
+
+        .account-section {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            border-bottom: 1px solid #ccc;
+            padding: 20px 0;
+        }
+        .section-label {
+            color: #999;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        .section-content { font-size: 1rem; }
+
+        /* Membership Actions */
+        .membership-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .email-display { font-weight: bold; }
+        .password-display { color: #777; letter-spacing: 2px; }
+        
+        .btn-link {
+            color: #0073e6;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn-link:hover { text-decoration: underline; }
+
+        .btn-cancel {
+            background: #e5e5e5;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-cancel:hover { background: #ccc; }
+
+        /* Edit Form */
+        .edit-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            display: none; /* Hidden by default */
+        }
+        .edit-box {
+            background: #fff;
+            padding: 40px;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 500px;
+            color: #333;
+        }
+        .edit-box h2 { margin-bottom: 20px; }
+        .edit-field { margin-bottom: 20px; }
+        .edit-field label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .edit-field input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        .edit-actions { text-align: right; }
+        .save-btn {
+            background: #0080ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .cancel-btn {
+            background: transparent;
+            color: #333;
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Responsive */
+        @media(max-width: 768px) {
+            .account-section { grid-template-columns: 1fr; gap: 10px; }
+            .section-label { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Simplified Navbar -->
+    <nav class="account-navbar">
+        <a href="index.html" class="logo"><img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix"></a>
+        <div style="display: flex; align-items: center;">
+            <div class="user-profile" style="width:32px; height:32px; background-image:url('https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png'); background-size:cover; border-radius:4px;"></div>
+            <a href="#" onclick="logout(); return false;">Sign Out</a>
+        </div>
+    </nav>
+
+    <div class="account-container">
+        <div class="account-header">
+            <h1>Account</h1>
+            <div class="member-since"><i class="fas fa-medal" style="color: #e50914; margin-right:5px;"></i> Member Since 2024</div>
+        </div>
+
+        <!-- Membership & Billing -->
+        <div class="account-section">
+            <div class="section-label">Membership & Billing</div>
+            <div class="section-content">
+                <button class="btn-cancel" onclick="alert('Subscription cancelled (Mock)')">Cancel Membership</button>
+                
+                <div style="margin-top: 20px; background: #fff; padding: 15px; border: 1px solid #ddd;">
+                    <div class="membership-details">
+                        <span class="email-display" id="dispEmail">Loading...</span>
+                        <a class="btn-link" onclick="openEdit('email')">Change account email</a>
+                    </div>
+                    <div class="membership-details">
+                        <span class="password-display">********</span>
+                        <a class="btn-link" onclick="openEdit('password')">Change password</a>
+                    </div>
+                    <div class="membership-details">
+                        <span>Phone: 071 *** **89</span>
+                        <a class="btn-link" onclick="alert('Phone management pending')">Change phone number</a>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; background: #eee; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <i class="fab fa-cc-visa" style="font-size: 2rem; color: #00579f; vertical-align: middle; margin-right: 10px;"></i>
+                        <span>**** **** **** 4242</span>
+                    </div>
+                    <a class="btn-link">Manage payment info</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plan Details -->
+        <div class="account-section">
+            <div class="section-label">Plan Details</div>
+            <div class="section-content">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: bold; font-size: 1.1rem;">Premium Ultra HD</span>
+                    <a class="btn-link">Change plan</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="account-section" style="border:none;">
+            <div class="section-label">Settings</div>
+            <div class="section-content">
+                <p><a class="btn-link" onclick="logout()">Sign out of all devices</a></p>
+                <p><a class="btn-link" href="help.html">Help Center</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="edit-overlay" id="editModal">
+        <div class="edit-box">
+            <h2 id="editTitle">Edit</h2>
+            <form id="editForm" onsubmit="saveChanges(event)">
+                <div class="edit-field">
+                    <label id="editLabel">New Value</label>
+                    <input type="text" id="editInput" required>
+                </div>
+                <div class="edit-actions">
+                    <button type="button" class="cancel-btn" onclick="closeEdit()">Cancel</button>
+                    <button type="submit" class="save-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Inline Account Logic
+        let currentMode = '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+        });
+
+        function loadUserData() {
+            const user = JSON.parse(localStorage.getItem('netflix_user'));
+            const emailElem = document.getElementById('dispEmail');
+            
+            if (user && user.email) {
+                emailElem.innerText = user.email;
+            } else {
+                emailElem.innerText = 'demo@netflix.com'; // Fallback
+            }
+        }
+
+        function openEdit(mode) {
+            currentMode = mode;
+            const modal = document.getElementById('editModal');
+            const title = document.getElementById('editTitle');
+            const label = document.getElementById('editLabel');
+            const input = document.getElementById('editInput');
+
+            modal.style.display = 'flex';
+            if (mode === 'email') {
+                title.innerText = 'Change Email';
+                label.innerText = 'New Email Address';
+                input.type = 'email';
+                input.placeholder = 'name@example.com';
+            } else if (mode === 'password') {
+                title.innerText = 'Change Password';
+                label.innerText = 'New Password';
+                input.type = 'text'; // Show for demo, usually password
+                input.placeholder = 'New Password';
+            }
+            input.value = '';
+            input.focus();
+        }
+
+        function closeEdit() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function saveChanges(e) {
+            e.preventDefault();
+            const val = document.getElementById('editInput').value;
+            let user = JSON.parse(localStorage.getItem('netflix_user')) || {email: 'demo@netflix.com', password: 'password'};
+
+            if (currentMode === 'email') {
+                user.email = val;
+                alert('Email updated successfully!');
+            } else if (currentMode === 'password') {
+                user.password = val;
+                alert('Password updated successfully!');
+            }
+
+            localStorage.setItem('netflix_user', JSON.stringify(user));
+            loadUserData();
+            closeEdit();
+        }
+    </script>
+</body>
+</html>

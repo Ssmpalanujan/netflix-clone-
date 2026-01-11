@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix - TV Shows</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <i class="fas fa-times close-search" id="closeSearchBtn"></i>
+        <input type="text" class="search-bar-large" id="largeSearchInput" placeholder="Type to search...">
+        <div class="movie-container search-results" id="searchResultsGrid"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+      <a href="index.html" class="logo"><img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix"></a>
+
+      <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="tvshows.html" class="active">TV Shows</a>
+          <a href="music.html">Music</a>
+
+          <a href="movies.html">Movies</a>
+          <a href="warnerbros.html">Warner Bros</a>
+          <a href="new.html">New & Popular</a>
+
+          <a href="suggestions.html">AI Picks</a>
+          <a href="mylist.html">My List</a>
+      </div>
+
+      <div class="user-actions">
+          <div class="search-box">
+             <i class="fas fa-search"></i>
+             <input type="text" id="headerSearchInput" placeholder="Ask AI...">
+             <i class="fas fa-magic ai-icon"></i>
+             <div class="search-suggestions" id="searchSuggestions"></div>
+          </div>
+          <i class="fas fa-random nav-icon" title="Surprise Me!" onclick="surpriseMe()"></i>
+          <i class="fas fa-bell nav-icon"></i>
+          <div class="user-profile"></div>
+          <div class="profile-dropdown" id="profileDropdown">
+              <a href="account.html">Account</a>
+              <a href="help.html">Help Center</a>
+              <a href="#" onclick="logout(); return false;">Sign out of Netflix</a>
+          </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <!-- Dynamic Elements -->
+        <div id="heroBadge" class="hero-badge" style="display:none;">
+            <span class="top-10-icon">TOP 10</span> #1 in TV Today
+        </div>
+        <div class="hero-logo-container" id="heroLogoContainer">
+            <!-- Image injected via JS -->
+        </div>
+        <h1 class="hero-title" id="heroTitle">Loading...</h1>
+        <p class="hero-description" id="heroDescription">Loading...</p>
+        <div class="hero-buttons">
+             <button class="btn btn-primary" id="heroPlayBtn"><i class="fas fa-play"></i> Play</button>
+             <button class="btn btn-secondary" id="heroInfoBtn"><i class="fas fa-info-circle"></i> More Info</button>
+             <button class="mute-btn muted" id="heroMuteBtn" onclick="toggleHeroMute()"><i class="fas fa-volume-mute" id="heroMuteIcon"></i></button>
+        </div>
+        <span class="age-rating" id="heroAgeRating">U/A 13+</span>
+      </div>
+    </header>
+
+    <main>
+        <h2 class="row-title" style="padding-left: 4%;">Trending TV</h2>
+        <div class="movie-container" id="trendingTVRow" style="padding: 20px 4%;"></div>
+        
+        <h2 class="row-title" style="padding-left: 4%;">Top Rated TV</h2>
+        <div class="movie-container" id="topRatedTVRow" style="padding: 20px 4%;"></div>
+        
+        <h2 class="row-title" style="padding-left: 4%;">Crime Dramas</h2>
+        <div class="movie-container" id="crimeTVRow" style="padding: 20px 4%;"></div>
+        
+        <section class="row">
+        <h2 class="row-title">Comedy Series</h2>
+        <div class="movie-container" id="comedyTVRow"></div>
+      </section>
+
+      <!-- Tamil TV Section -->
+      <section class="row">
+          <h2 class="row-title">Tamil TV Shows & Web Series</h2>
+          <div class="movie-container" id="tamilTVRow"></div>
+      </section>
+
+      <section class="row">
+          <h2 class="row-title">Tamil Reality TV</h2>
+          <div class="movie-container" id="tamilRealityRow"></div>
+      </section>
+    </main>
+
+    <!-- Redesigned Footer -->
+    <footer class="modern-footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <span class="footer-logo">Netflix</span>
+                <p>Your gateway to endless entertainment. Powered by AI.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4>Browse</h4>
+                <a href="index.html">Home</a>
+                <a href="movies.html">Movies</a>
+                <a href="tvshows.html">TV Shows</a>
+                <a href="mylist.html">My List</a>
+            </div>
+            <div class="footer-links-col">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">FAQ</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+            <div class="footer-links-col">
+                <h4>About</h4>
+                <a href="#">Our Story</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Netflix, Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

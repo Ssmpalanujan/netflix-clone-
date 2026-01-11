@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix - Movie Details</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <i class="fas fa-times close-search" id="closeSearchBtn"></i>
+        <input type="text" class="search-bar-large" id="largeSearchInput" placeholder="Type to search...">
+        <div class="movie-container search-results" id="searchResultsGrid"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+      <a href="index.html" class="logo"><img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix"></a>
+
+      <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="tvshows.html">TV Shows</a>
+          <a href="movies.html">Movies</a>
+          <a href="warnerbros.html">Warner Bros</a>
+          <a href="new.html">New & Popular</a>
+
+          <a href="suggestions.html">AI Picks</a>
+          <a href="mylist.html">My List</a>
+      </div>
+
+      <div class="user-actions">
+          <div class="search-box">
+             <i class="fas fa-search"></i>
+             <input type="text" id="headerSearchInput" placeholder="Ask AI...">
+             <i class="fas fa-magic ai-icon"></i>
+             <div class="search-suggestions" id="searchSuggestions"></div>
+          </div>
+          <i class="fas fa-random nav-icon" title="Surprise Me!" onclick="surpriseMe()"></i>
+          <i class="fas fa-bell nav-icon"></i>
+          <div class="user-profile"></div>
+          <div class="profile-dropdown" id="profileDropdown">
+              <a href="account.html">Account</a>
+              <a href="help.html">Help Center</a>
+              <a href="#" onclick="logout(); return false;">Sign out of Netflix</a>
+          </div>
+      </div>
+    </nav>
+
+    <!-- Movie Details Section -->
+    <div class="movie-details-container">
+        <!-- Dynamic Content will be injected here -->
+        <div class="loader" id="loader" style="width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; z-index: 100;">
+            <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary-color);"></i>
+        </div>
+        
+        <div id="movieContent" style="display: none; animation: fadeIn 0.5s ease;">
+             <!-- Main Info Section -->
+             <div class="details-grid">
+                 <div class="poster-column">
+                    <img id="detailPoster" src="" alt="Movie Poster" class="main-poster">
+                 </div>
+
+                <div class="info-column">
+                    <h1 id="detailTitle">Title</h1>
+                    <div class="movie-stats">
+                        <span class="rating">Match <span id="detailRating">0</span>%</span>
+                        <span id="detailDate">2023</span>
+                        <span class="tag">HD</span>
+                        <span class="tag" id="detailRuntime">120m</span>
+                    </div>
+                    
+                    <p class="overview" id="detailOverview">
+                        Description goes here...
+                    </p>
+
+                    <div class="action-buttons" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="window.playInlineVideo(currentTrailerKey)"><i class="fas fa-play"></i> Play Trailer</button>
+                        <button class="btn btn-secondary" id="myListBtn" onclick="toggleMyList()"><i class="fas fa-plus"></i> My List</button>
+                        <button class="btn btn-secondary" onclick="triggerDownload()"><i class="fas fa-download"></i> Download</button>
+                        <button class="btn btn-icon-only" onclick="triggerShare()" title="Share"><i class="fas fa-share-alt"></i></button>
+                        <button class="btn btn-icon-only" onclick="triggerRate()" title="Rate"><i class="fas fa-thumbs-up"></i></button>
+                    </div>
+
+                    <!-- [NEW] Quick Info Row -->
+                    <div class="quick-info-row" style="margin-top: 20px; display: flex; gap: 20px; color: #bbb; font-size: 0.9rem; align-items: center;">
+                        <div id="quickAudio"><i class="fas fa-volume-up"></i> <span class="val">English, Tamil</span></div>
+                        <div id="quickSubs"><i class="fas fa-closed-captioning"></i> <span class="val">English</span></div>
+                        <div id="quickQuality"><i class="fas fa-tv"></i> <span class="val">4K Ultra HD</span></div>
+                    </div>
+
+
+                    <!-- Production Metadata (New) -->
+                    <div class="meta-grid" id="productionInfo" style="margin-top: 25px;">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- Trivia Section (New) -->
+                    <div class="trivia-container" id="triviaContainer" style="display: none; margin-top: 30px;">
+                        <h3 class="trivia-title"><i class="fas fa-lightbulb"></i> Did You Know?</h3>
+                        <div id="triviaContent"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cast Section -->
+            <div class="content-section">
+                <h3 class="section-title">Top Cast</h3>
+                <div class="cast-container" id="castContainer"></div>
+            </div>
+
+            <!-- Reviews Section (New) -->
+            <div class="content-section">
+                <h3 class="section-title">User Reviews</h3>
+                <div class="reviews-container" id="reviewsContainer">
+                    <!-- Reviews populated here -->
+                </div>
+            </div>
+
+            <!-- Media Gallery (New) -->
+            <div class="content-section">
+                <h3 class="section-title">Gallery</h3>
+                <div class="media-gallery-grid" id="galleryContainer">
+                    <!-- Backdrops populated here -->
+                </div>
+            </div>
+
+            <!-- More Videos (New) -->
+            <div class="content-section">
+                <h3 class="section-title">Related Videos</h3>
+                <div class="video-row" id="videoContainer">
+                    <!-- Videos populated here -->
+                </div>
+            </div>
+
+            <!-- Similar Movies Section -->
+            <div class="content-section">
+                <h3 class="section-title">Similar Movies</h3>
+                <div class="movie-container" id="similarRow"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Trailer Modal -->
+    <div class="modal-overlay" id="trailerModal" onclick="closeModal(event)">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal(event)">&times;</span>
+            <iframe id="modalVideoPlayer" width="100%" height="100%" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Inline script for movie.html specific logic or shared script.js can handle it.
+        // For simplicity, we'll let script.js handle the logic by checking the URL query params.
+    </script>
+    <!-- Redesigned Footer -->
+    <footer class="modern-footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <span class="footer-logo">Netflix</span>
+                <p>Your gateway to endless entertainment. Powered by AI.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4>Browse</h4>
+                <a href="index.html">Home</a>
+                <a href="movies.html">Movies</a>
+                <a href="tvshows.html">TV Shows</a>
+                <a href="mylist.html">My List</a>
+            </div>
+            <div class="footer-links-col">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">FAQ</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+            <div class="footer-links-col">
+                <h4>About</h4>
+                <a href="#">Our Story</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Netflix, Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
