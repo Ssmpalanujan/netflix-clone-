@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix - Warner Bros</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .wb-iframe-container {
+            width: 100%;
+            height: calc(100vh - 70px); /* Subtract navbar height */
+            border: none;
+            padding-top: 70px;
+        }
+        main {
+            padding: 0 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+      <a href="index.html" class="logo"><img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix"></a>
+
+      <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="tvshows.html">TV Shows</a>
+          <a href="music.html">Music</a>
+
+          <a href="movies.html">Movies</a>
+          <a href="warnerbros.html" class="active">Warner Bros</a>
+          <a href="new.html">New & Popular</a>
+
+          <a href="suggestions.html">AI Picks</a>
+          <a href="mylist.html">My List</a>
+      </div>
+
+      <div class="user-actions">
+          <div class="search-box">
+             <i class="fas fa-search"></i>
+             <input type="text" id="headerSearchInput" placeholder="Ask AI...">
+             <i class="fas fa-magic ai-icon"></i>
+             <div class="search-suggestions" id="searchSuggestions"></div>
+          </div>
+          <i class="fas fa-random nav-icon" title="Surprise Me!" onclick="surpriseMe()"></i>
+          <i class="fas fa-bell nav-icon"></i>
+          <div class="user-profile"></div>
+          <div class="profile-dropdown" id="profileDropdown">
+              <a href="account.html">Account</a>
+              <a href="help.html">Help Center</a>
+              <a href="#" onclick="logout(); return false;">Sign out of Netflix</a>
+          </div>
+      </div>
+    </nav>
+  
+    <main>
+        <iframe src="https://www.warnerbros.com/movies" class="wb-iframe-container" title="Warner Bros Movies"></iframe>
+    </main>
+    
+    <!-- Redesigned Footer -->
+    <footer class="modern-footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <span class="footer-logo">Netflix</span>
+                <p>Your gateway to endless entertainment. Powered by AI.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4>Browse</h4>
+                <a href="index.html">Home</a>
+                <a href="movies.html">Movies</a>
+                <a href="tvshows.html">TV Shows</a>
+                <a href="mylist.html">My List</a>
+            </div>
+            <div class="footer-links-col">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">FAQ</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+            <div class="footer-links-col">
+                <h4>About</h4>
+                <a href="#">Our Story</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Netflix, Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

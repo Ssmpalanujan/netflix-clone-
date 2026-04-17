@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix - Sign In</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://assets.nflxext.com/ffe/siteui/vlv3/f841d4c7-10e1-40af-bcae-07a3f8dc141a/f6d7434e-d6de-4185-a6d4-c77a2d08737b/US-en-20220502-popsignuptwoweeks-perspective_alpha_website_medium.jpg');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .auth-navbar {
+            padding: 20px 4%;
+            background: transparent;
+        }
+
+        .auth-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-box {
+            background: rgba(0, 0, 0, 0.75);
+            padding: 60px 68px 40px;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 450px;
+            min-height: 600px; /* Fixed height for consistency */
+        }
+
+        .auth-title {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 28px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: #333;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            height: 50px;
+            padding: 0 20px;
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+        
+        .auth-input:focus {
+            background: #454545;
+            outline: none;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: #e50914;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            height: 48px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 24px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .auth-btn:hover {
+            background: #f40612;
+        }
+
+        .auth-footer {
+            margin-top: 16px;
+            color: #b3b3b3;
+            font-size: 1rem;
+        }
+        
+        .toggle-link {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #e87c03;
+            font-size: 0.875rem;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="auth-navbar">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix" class="logo" style="height: 45px;">
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <h1 class="auth-title" id="formTitle">Sign In</h1>
+            
+            <div id="errorMsg" class="error-message">Invalid credentials.</div>
+
+            <form id="authForm" onsubmit="handleAuth(event)">
+                <input type="email" id="email" class="auth-input" placeholder="Email or phone number" required>
+                <input type="password" id="password" class="auth-input" placeholder="Password" required>
+                <!-- Confirm Password (Hidden by default) -->
+                <input type="password" id="confirmPassword" class="auth-input" placeholder="Confirm Password" style="display:none;">
+                
+                <button type="submit" class="auth-btn" id="submitBtn">Sign In</button>
+            </form>
+
+            <div class="auth-footer">
+                <span id="toggleText">New to Netflix? </span>
+                <a class="toggle-link" onclick="toggleAuthMode()">Sign up now.</a>
+            </div>
+            
+            <div style="margin-top: 20px; font-size: 0.8rem; color: #8c8c8c;">
+                <p>This page is protected by Google reCAPTCHA to ensure you're not a bot.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Redesigned Footer (Simplified for Login) -->
+    <footer class="modern-footer" style="margin-top:0; background: rgba(0,0,0,0.75);">
+        <div class="footer-bottom" style="border:none;">
+            <p>&copy; 2024 Netflix, Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Inline Auth Logic to keep it simple or call script.js functions
+        let isLoginMode = true;
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            const title = document.getElementById('formTitle');
+            const btn = document.getElementById('submitBtn');
+            const toggleText = document.getElementById('toggleText');
+            const confirmInput = document.getElementById('confirmPassword');
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (isLoginMode) {
+                title.innerText = 'Sign In';
+                btn.innerText = 'Sign In';
+                toggleText.innerText = 'New to Netflix? ';
+                confirmInput.style.display = 'none';
+                confirmInput.required = false;
+            } else {
+                title.innerText = 'Sign Up';
+                btn.innerText = 'Sign Up';
+                toggleText.innerText = 'Already have an account? ';
+                confirmInput.style.display = 'block';
+                confirmInput.required = true;
+            }
+            errorMsg.style.display = 'none';
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (!isLoginMode) {
+                // Register
+                if (password !== confirm) {
+                    errorMsg.innerText = "Passwords do not match.";
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+                // Save to localStorage
+                const user = { email, password };
+                localStorage.setItem('netflix_user', JSON.stringify(user));
+                alert('Account created! Signing you in...');
+                window.location.href = 'index.html';
+            } else {
+                // Login
+                const storedUser = JSON.parse(localStorage.getItem('netflix_user'));
+                // Demo backdoor: allow if no user exists or match
+                if (!storedUser || (storedUser.email === email && storedUser.password === password)) {
+                     // If no user exists, we just let them in as a "demo" or creates a session
+                     // But strictly:
+                     if (storedUser && storedUser.password !== password) {
+                         errorMsg.innerText = "Incorrect password.";
+                         errorMsg.style.display = 'block';
+                         return;
+                     }
+                     window.location.href = 'index.html';
+                } else {
+                     errorMsg.innerText = "User not found.";
+                     errorMsg.style.display = 'block';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netflix - Watch TV Shows Online, Watch Movies Online</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <i class="fas fa-times close-search" id="closeSearchBtn"></i>
+        <input type="text" class="search-bar-large" id="largeSearchInput" placeholder="Type to search...">
+        <div class="movie-container search-results" id="searchResultsGrid"></div>
+    </div>
+    
+
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+      <a href="index.html" class="logo"><img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix"></a>
+
+      <div class="nav-links">
+          <a href="index.html" class="active">Home</a>
+          <a href="tvshows.html">TV Shows</a>
+          <a href="music.html">Music</a>
+
+
+          <a href="movies.html">Movies</a>
+          <a href="warnerbros.html">Warner Bros</a>
+          <a href="new.html">New & Popular</a>
+
+          <a href="suggestions.html">AI Picks</a>
+          <a href="mylist.html">My List</a>
+      </div>
+
+      <div class="user-actions">
+          <div class="search-box">
+             <i class="fas fa-search"></i>
+             <input type="text" id="headerSearchInput" placeholder="Ask AI...">
+             <i class="fas fa-microphone" id="voiceSearchBtn" title="Voice Search" style="cursor:pointer; margin-right:8px;"></i>
+             <i class="fas fa-magic ai-icon"></i>
+             <div class="search-suggestions" id="searchSuggestions">
+                 <!-- Search History will form here -->
+             </div>
+          </div>
+          <i class="fas fa-random nav-icon" title="Surprise Me!" onclick="surpriseMe()"></i>
+          <div class="lang-dropdown-container">
+              <i class="fas fa-globe nav-icon" id="langBtn" onclick="toggleLangMenu()"></i>
+              <div class="lang-menu" id="langMenu">
+                  <div class="lang-option selected" onclick="changeLanguage('en')">English</div>
+                  <div class="lang-option" onclick="changeLanguage('ta')">Tamil</div>
+                  <div class="lang-option" onclick="changeLanguage('hi')">Hindi</div>
+                  <div class="lang-option" onclick="changeLanguage('ml')">Malayalam</div>
+                  <div class="lang-option" onclick="changeLanguage('te')">Telugu</div>
+              </div>
+          </div>
+          <div class="nav-icon-container" style="position:relative;">
+              <i class="fas fa-bell nav-icon"></i>
+              <span class="badge" id="watchlistCount">0</span>
+          </div>
+          <div class="user-profile"></div>
+          <div class="profile-dropdown" id="profileDropdown">
+              <!-- Profile Header -->
+              <div class="dropdown-profile-header">
+                  <img src="https://i.pravatar.cc/100?img=8" alt="Profile">
+                  <div class="profile-info">
+                      <span class="profile-name">User</span>
+                      <span class="profile-meta">Premium Plan</span>
+                  </div>
+              </div>
+              <hr class="dropdown-divider">
+              <a href="#" class="dropdown-item"><i class="fas fa-user-edit"></i> Manage Profiles</a>
+              <a href="account.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+              <a href="help.html" class="dropdown-item"><i class="fas fa-question-circle"></i> Help Center</a>
+              <hr class="dropdown-divider">
+              <a href="#" onclick="logout(); return false;" class="dropdown-item logout-item"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+          </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="hero">
+       <div class="hero-video-wrapper" id="heroVideoWrapper"></div>
+        <div class="hero-content">
+            <!-- Dynamic Elements -->
+            <div id="heroBadge" class="hero-badge" style="display:none;">
+                <span class="top-10-icon">TOP 10</span> #1 in Movies Today
+            </div>
+            <div class="hero-logo-container" id="heroLogoContainer">
+                <!-- Image injected via JS, fallback to title -->
+            </div>
+            <h1 class="hero-title" id="heroTitle">Loading...</h1>
+            <p class="hero-description" id="heroDescription"></p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" id="heroPlayBtn"><i class="fas fa-play"></i> Play</button>
+                <button class="btn btn-secondary" id="heroInfoBtn"><i class="fas fa-info-circle"></i> More Info</button>
+                <button class="mute-btn muted" id="heroMuteBtn" onclick="toggleHeroMute()"><i class="fas fa-volume-mute" id="heroMuteIcon"></i></button>
+            </div>
+            <span class="age-rating" id="heroAgeRating">U/A 13+</span>
+        </div>
+    </header>
+
+
+
+    <!-- Main Content -->
+    <div class="content-container">
+
+    <!-- Genre Pills Quick Nav -->
+    <div class="genre-pills" id="genrePills">
+        <a href="#actionRow" class="pill"><i class="fas fa-fire"></i> Action</a>
+        <a href="#comedyRow" class="pill"><i class="fas fa-laugh"></i> Comedy</a>
+        <a href="#dramaRow" class="pill"><i class="fas fa-theater-masks"></i> Drama</a>
+        <a href="#scifiRow" class="pill"><i class="fas fa-rocket"></i> Sci-Fi</a>
+        <a href="#horrorRow" class="pill"><i class="fas fa-ghost"></i> Horror</a>
+        <a href="#romanceRow" class="pill"><i class="fas fa-heart"></i> Romance</a>
+        <a href="#thrillerRow" class="pill"><i class="fas fa-running"></i> Thriller</a>
+        <a href="#realityRow" class="pill"><i class="fas fa-tv"></i> Reality TV</a>
+        <a href="#animeRow" class="pill"><i class="fas fa-dragon"></i> Anime</a>
+        <a href="#documentaryRow" class="pill"><i class="fas fa-book-open"></i> Documentary</a>
+        <a href="#mysteryRow" class="pill"><i class="fas fa-user-secret"></i> Mystery</a>
+    </div>
+
+
+
+    <!-- Recap Modal -->
+    <div id="recapModal" class="modal">
+        <div class="modal-content" style="max-width: 600px; padding: 30px; background: linear-gradient(135deg, #1a1a1a, #2a2a2a);">
+            <div class="modal-header">
+                <h2><i class="fas fa-magic" style="color:var(--primary-color);"></i> AI Smart Recap</h2>
+                <span class="close-modal" onclick="closeRecapModal()">&times;</span>
+            </div>
+            <div id="recapBody" style="margin-top: 20px; line-height: 1.6; color: #ddd;">
+                <!-- AI Content goes here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Movie Rows -->
+    <main style="margin-top: -60px; position: relative; z-index: 10; padding-bottom: 50px;">
+
+
+        <section class="row" id="recommendationsSection" style="display: none;">
+            <h2 class="row-title">Because You Watched <span id="recSourceTitle" style="color:var(--primary-color);"></span></h2>
+            <div class="movie-container" id="recommendationsRow"></div>
+        </section>
+
+        <section class="row" id="myListSection" style="display: none;">
+            <h2 class="row-title">My List</h2>
+            <div class="movie-container" id="myListRow"></div>
+        </section>
+
+        <!-- Top 10 Row (New Feature) -->
+        <section class="row top-10-row">
+            <h2 class="row-title">Top 10 Movies Today <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+            <div class="movie-container ranked-container" id="top10Row"></div>
+        </section>
+
+      <!-- Hidden Gems (New Feature) -->
+      <section class="row">
+        <h2 class="row-title">💎 Hidden Gems <span style="font-size:0.8em; color:#888; font-weight:normal;">- Highly Rated, Less Known</span> <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+        <div class="movie-container" id="hiddenGemsRow"></div>
+      </section>
+
+      <!-- Short Films (New Feature) -->
+      <section class="row">
+        <h2 class="row-title">⏱️ Quick Watch <span style="font-size:0.8em; color:#888; font-weight:normal;">- Under 90 Mins</span> <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+        <div class="movie-container" id="shortFilmsRow"></div>
+      </section>
+
+      <section class="row">
+        <h2 class="row-title">Trending Stars</h2>
+        <div class="movie-container" id="trendingPeopleRow"></div>
+      </section>
+
+      <!-- Collections Section (New Feature) -->
+      <section class="row">
+          <h2 class="row-title">Curated Collections</h2>
+          <div class="collections-grid">
+              <div class="collection-card" onclick="window.location.href='#actionRow'">
+                  <img src="https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg" alt="Action">
+                  <div class="collection-overlay">
+                      <h3>Adrenaline Rush</h3>
+                      <p>Top Action Picks</p>
+                  </div>
+              </div>
+              <div class="collection-card" onclick="window.location.href='#scifiRow'">
+                  <img src="https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg" alt="Sci-Fi">
+                  <div class="collection-overlay">
+                      <h3>Sci-Fi Worlds</h3>
+                      <p>Explore the Unknown</p>
+                  </div>
+              </div>
+              <div class="collection-card" onclick="window.location.href='#dramaRow'">
+                  <img src="https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" alt="Drama">
+                  <div class="collection-overlay">
+                      <h3>Critics' Choice</h3>
+                      <p>Award Winning Dramas</p>
+                  </div>
+              </div>
+              <div class="collection-card" onclick="window.location.href='#animeRow'">
+                  <img src="https://image.tmdb.org/t/p/w500/yDHYTfA3R0jFYba16jBB1ef8oIt.jpg" alt="Anime">
+                  <div class="collection-overlay">
+                      <h3>Anime Hub</h3>
+                      <p>Best from Japan</p>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      <!-- Mood Section -->
+      <section class="row" style="margin-top:40px; margin-bottom:40px;">
+          <h2 class="row-title">Mood Station <span style="font-size:0.8em; color:#888; font-weight:normal;">- Pick your vibe</span></h2>
+          <div class="mood-selector" style="display:flex; gap:15px; overflow-x:auto; padding-bottom:15px;">
+              <button class="pill" onclick="loadMood('calm')">😌 Calm</button>
+              <button class="pill" onclick="loadMood('funny')">😂 Funny</button>
+              <button class="pill" onclick="loadMood('sad')">😢 Sad</button>
+              <button class="pill" onclick="loadMood('intense')">🔥 Intense</button>
+              <button class="pill" onclick="loadMood('romantic')">❤️ Romantic</button>
+          </div>
+          <div class="movie-container" id="moodResultsRow" style="min-height:50px; transition:all 0.3s;">
+              <p style="color:#666; font-size:0.9em; margin-left:10px;">Select a mood to get recommendations...</p>
+          </div>
+      </section>
+
+      <section class="row">
+        <h2 class="row-title">Top Rated <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+        <div class="movie-container" id="topRatedRow"></div>
+      </section>
+
+      <section class="row">
+          <h2 class="row-title">Kollywood Blockbusters (Tamil) <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+          <div class="movie-container" id="tamilHitsRow"></div>
+      </section>
+
+      <section class="row">
+          <h2 class="row-title">Tamil Action Hits <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+          <div class="movie-container" id="tamilActionRow"></div>
+      </section>
+
+      <section class="row">
+          <h2 class="row-title">Tamil Comedy <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+          <div class="movie-container" id="tamilComedyRow"></div>
+      </section>
+      
+      <section class="row">
+          <h2 class="row-title">Tamil Romance <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+          <div class="movie-container" id="tamilRomanceRow"></div>
+      </section>
+
+      <section class="row">
+          <h2 class="row-title">Upcoming Releases <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+          <div class="movie-container" id="upcomingRow"></div>
+      </section>
+
+      <!-- Genre Rows -->
+      <section class="row" id="actionRow">
+        <h2 class="row-title">Action Thrillers <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+        <div class="movie-container" id="actionMoviesRow"></div>
+      </section>
+
+      <section class="row" id="comedyRow">
+        <h2 class="row-title">Comedies <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+        <div class="movie-container" id="comedyMoviesRow"></div>
+      </section>
+
+      <section class="row" id="dramaRow">
+        <h2 class="row-title">Drama <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+        <div class="movie-container" id="dramaMoviesRow"></div>
+      </section>
+
+      <section class="row" id="scifiRow">
+        <h2 class="row-title">Sci-Fi & Fantasy <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+        <div class="movie-container" id="scifiMoviesRow"></div>
+      </section>
+        
+
+        <section class="row" id="horrorRow">
+            <h2 class="row-title">Horror <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+            <div class="movie-container" id="horrorMoviesRow"></div>
+        </section>
+
+        <section class="row" id="mysteryRow">
+            <h2 class="row-title">Mystery & Thrillers <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+            <div class="movie-container" id="mysteryMoviesRow"></div>
+        </section>
+
+        <section class="row" id="romanceRow">
+            <h2 class="row-title">Romance <span class="expand-row-btn" onclick="toggleRowExpand(this)">Show More <i class="fas fa-chevron-down"></i></span></h2>
+            <div class="movie-container" id="romanceMoviesRow"></div>
+        </section>
+
+        <section class="row" id="thrillerRow">
+            <h2 class="row-title">Thriller</h2>
+            <div class="movie-container" id="thrillerMoviesRow"></div>
+        </section>
+
+        <section class="row" id="realityRow">
+            <h2 class="row-title">Reality TV</h2>
+            <div class="movie-container" id="realityTVRow"></div>
+        </section>
+
+        <section class="row" id="animeRow">
+            <h2 class="row-title">Anime</h2>
+            <div class="movie-container" id="animeMoviesRow"></div>
+        </section>
+
+        <section class="row" id="documentaryRow">
+            <h2 class="row-title">Documentaries</h2>
+            <div class="movie-container" id="documentaryMoviesRow"></div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2 class="section-header">Frequently Asked Questions</h2>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header">What is StreamFlix?<i class="fas fa-plus"></i></button>
+                    <div class="accordion-body">
+                        StreamFlix is a streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries, and more on thousands of internet-connected devices.
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">How much does it cost?<i class="fas fa-plus"></i></button>
+                    <div class="accordion-body">
+                        Watch StreamFlix on your smartphone, tablet, Smart TV, laptop, or streaming device, all for one fixed monthly fee. Plans range from $8.99 to $17.99 a month. No extra costs, no contracts.
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Where can I watch?<i class="fas fa-plus"></i></button>
+                    <div class="accordion-body">
+                        Watch anywhere, anytime. Sign in with your StreamFlix account to watch instantly on the web at StreamFlix.com from your personal computer or on any internet-connected device that offers the StreamFlix app.
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">How do I cancel?<i class="fas fa-plus"></i></button>
+                    <div class="accordion-body">
+                        StreamFlix is flexible. There are no pesky contracts and no commitments. You can easily cancel your account online in two clicks. There are no cancellation fees – start or stop your account anytime.
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Watch Everywhere Section -->
+    <section class="feature-section" style="padding: 60px 4%; background: black; text-align: center; border-top: 8px solid #222;">
+        <h2 style="font-size: 2.5rem; margin-bottom: 40px;">Watch Everywhere</h2>
+        <div class="watch-grid" style="display: flex; justify-content: center; gap: 50px; flex-wrap: wrap;">
+            <div class="feature-item">
+                <i class="fas fa-tv" style="font-size: 3rem; color: #e50914; margin-bottom: 20px;"></i>
+                <h3 style="font-size: 1.5rem;">TVs</h3>
+                <p style="color: #999;">Smart TVs, PlayStation, Xbox, Chromecast, Apple TV.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-mobile-alt" style="font-size: 3rem; color: #e50914; margin-bottom: 20px;"></i>
+                <h3 style="font-size: 1.5rem;">Mobile</h3>
+                <p style="color: #999;">Android, iPhone, Tablet. Download to watch offline.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-laptop" style="font-size: 3rem; color: #e50914; margin-bottom: 20px;"></i>
+                <h3 style="font-size: 1.5rem;">Laptop</h3>
+                <p style="color: #999;">MacOS, Windows, Chromebook. Watch on Netflix.com.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section (New Feature) -->
+    <section class="newsletter-section" style="padding: 60px 4%; background: linear-gradient(to right, #000, #111); border-top: 1px solid #333; text-align: center;">
+        <div style="max-width: 700px; margin: 0 auto;">
+            <h2 style="font-size: 2rem; margin-bottom: 15px;">Want to know what's coming next?</h2>
+            <p style="color: #aaa; margin-bottom: 30px;">Sign up for our newsletter to get updates on new releases and exclusive content.</p>
+            <div class="newsletter-input-group" style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <input type="email" placeholder="Email address" style="padding: 15px 20px; width: 350px; border-radius: 4px; border: 1px solid #444; background: rgba(0,0,0,0.5); color: white; outline: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='#e50914'" onblur="this.style.borderColor='#444'">
+                <button class="btn btn-primary" onclick="alert('Thanks for subscribing!')" style="border-radius: 4px; padding: 15px 30px;">Get Started <i class="fas fa-chevron-right" style="margin-left: 10px; font-size: 0.8em;"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kids Profile Section -->
+
+
+
+
+    <!-- Redesigned Footer -->
+    <footer class="modern-footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <span class="footer-logo">Netflix</span>
+                <p>Your gateway to endless entertainment. Powered by AI.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4>Browse</h4>
+                <a href="index.html">Home</a>
+                <a href="movies.html">Movies</a>
+                <a href="tvshows.html">TV Shows</a>
+                <a href="mylist.html">My List</a>
+            </div>
+            <div class="footer-links-col">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">FAQ</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+            <div class="footer-links-col">
+                <h4>About</h4>
+                <a href="#">Our Story</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Netflix, Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

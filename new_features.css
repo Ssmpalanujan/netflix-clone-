@@ -1,0 +1,151 @@
+/* --- News API & Horizontal Trailers Update --- */
+
+/* Horizontal Trailer Row */
+.trailer-row-horizontal {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.trailer-row-horizontal::-webkit-scrollbar {
+    height: 8px;
+}
+.trailer-row-horizontal::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+.trailer-row-horizontal::-webkit-scrollbar-track {
+    background: #111;
+}
+
+.trailer-card-horizontal {
+    flex: 0 0 300px; /* Fixed width for cards */
+    background: #1f1f1f;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid #333;
+}
+
+.trailer-card-horizontal:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    border-color: #e50914;
+}
+
+.trailer-thumb {
+    height: 170px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.play-btn-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(229, 9, 20, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(229, 9, 20, 0.6);
+    transition: transform 0.3s;
+}
+
+.trailer-card-horizontal:hover .play-btn-overlay {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.play-btn-overlay i {
+    color: white;
+    font-size: 1.2rem;
+    margin-left: 4px; /* Optical center fix */
+}
+
+.trailer-info {
+    padding: 15px;
+}
+
+.trailer-info h3 {
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.trailer-info p {
+    color: #888;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Hype Timeline Scroller Styles */
+.hype-scroller {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 15px;
+}
+.hype-scroller::-webkit-scrollbar {
+    height: 6px;
+}
+.hype-scroller::-webkit-scrollbar-thumb {
+    background: #333;
+}
+
+.hype-card {
+    min-width: 140px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.hype-card:hover {
+    transform: translateY(-5px);
+}
+
+.hype-date-tag {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    background: #e50914;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 0 4px 4px 0;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    z-index: 2;
+}
+
+.hype-img {
+    width: 100%;
+    border-radius: 8px;
+    border: 2px solid #333;
+    transition: border-color 0.3s;
+}
+
+.hype-card:hover .hype-img {
+    border-color: #e50914;
+}
+
+.hype-title {
+    color: #ddd;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}

@@ -1,0 +1,180 @@
+/* Music Page Specific Styles */
+
+/* Hero Section */
+.music-hero {
+    position: relative;
+    height: 75vh;
+    width: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, #141414 100%), url('https://image.tmdb.org/t/p/original/9yBVqNruk6Ykrgw35VLkDnhjRTe.jpg');
+    background-size: cover;
+    background-position: center top;
+    display: flex;
+    align-items: center;
+    padding-left: 5%;
+    margin-bottom: -50px; /* Overlap with content */
+}
+
+.music-hero-content {
+    z-index: 10;
+    max-width: 600px;
+}
+
+.music-hero h1 {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(45deg, #fff, #ddd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.music-hero p {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    color: #f0f0f0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    font-weight: 400;
+}
+
+/* Integrated Music Player Modal */
+#musicPlayerModal {
+    display: none;
+    position: fixed;
+    z-index: 20000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.95);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.3s ease;
+}
+
+.music-player-content {
+    /* Layout defined in JS structure, refined here */
+    background: #000 !important; 
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 100px rgba(229, 9, 20, 0.2);
+}
+
+.close-player {
+    transition: transform 0.2s, color 0.2s;
+}
+.close-player:hover {
+    color: #e50914 !important;
+    transform: scale(1.1);
+}
+
+/* Playlist (Queue) Styles */
+.player-queue {
+    scrollbar-width: thin;
+    scrollbar-color: #333 #121212;
+}
+.player-queue::-webkit-scrollbar {
+    width: 8px;
+}
+.player-queue::-webkit-scrollbar-track {
+    background: #121212;
+}
+.player-queue::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 4px;
+}
+
+.queue-item {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+.queue-item:hover {
+    background-color: rgba(255,255,255,0.05) !important;
+    padding-left: 15px !important; /* Slight shift effect */
+}
+
+/* Active item style is handled by JS but we can enhance it */
+.queue-item[style*="background: rgb(34, 34, 34)"] {
+    background: linear-gradient(90deg, #222, transparent) !important;
+    border-left: 3px solid #e50914;
+}
+
+/* Section Titles */
+.section-title {
+    font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+    padding-left: 5%;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    font-size: 1.4vw;
+    font-weight: 500;
+    color: #e5e5e5;
+    transition: color 0.3s;
+}
+.section-title:hover {
+    color: #fff;
+}
+
+/* Loader */
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #e50914;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 50px auto;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* Navigation Chips */
+.browse-chips::-webkit-scrollbar { height: 4px; }
+.browse-chips::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+.chip {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    transition: 0.3s;
+}
+
+.chip:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+.chip.active {
+    background: #e50914;
+    border-color: #e50914;
+}
+
+/* Metadata Badges */
+.explicit-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background: #444;
+    color: #aeaeae;
+    font-size: 0.6rem;
+    border-radius: 3px;
+    margin-right: 6px;
+    border: 1px solid #666;
+}
+
+.duration-tag {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+}

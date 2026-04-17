@@ -1,0 +1,323 @@
+
+/* --- Live News Slider (Premium) --- */
+.news-slider-container {
+    background: linear-gradient(90deg, #111 0%, #1a1a1a 100%);
+    border-bottom: 1px solid #333;
+    padding: 0 4%;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    height: 120px;
+    margin-bottom: 0px; /* Removed margin to sit flush with progress bar wrapper */
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    /* Glassmorphism update */
+    backdrop-filter: blur(10px);
+    background: rgba(17, 17, 17, 0.95);
+}
+
+.news-slider-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #fff;
+    white-space: nowrap;
+    border-right: 2px solid #333;
+    padding-right: 30px;
+    height: 100%;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #e50914;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #e50914;
+    animation: flash 1.5s infinite;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.news-slider {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* Premium Slide Layout */
+.news-slide-content.premium-slide {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    width: 100%;
+    height: 100%;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.slide-visual-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.8;
+}
+
+.slide-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+
+.slide-info h3 {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Box Office Premium */
+.bo-grid-premium {
+    display: flex;
+    gap: 15px; /* Reduced from 40px for Top 5 */
+    width: 100%;
+    justify-content: space-between;
+}
+
+.bo-item-premium {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Reduced from 12px */
+}
+
+.bo-rank {
+    font-size: 1.8rem; /* Slightly smaller */
+    font-weight: 900;
+    color: rgba(255,255,255,0.1);
+    line-height: 1;
+}
+
+.bo-title {
+    display: block;
+    font-size: 0.9rem; /* Slightly smaller */
+    font-weight: 700;
+    color: white;
+    white-space: nowrap; /* Prevent wrap */
+    max-width: 140px; /* Truncate if too long */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bo-val {
+    display: block;
+    font-size: 0.85rem;
+    color: #46d369;
+    font-weight: 600;
+}
+
+/* List Premium (Announcements/Trailers) */
+.slide-list-premium {
+    display: flex;
+    gap: 15px; /* Reduced from 30px */
+    width: 100%;
+    justify-content: space-between;
+}
+
+.slide-mini-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.05);
+    padding: 8px 15px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.slide-badge {
+    background: #e50914;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.slide-text {
+    font-size: 0.95rem;
+    color: #e0e0e0;
+    font-weight: 500;
+}
+
+.play-icon-mini {
+    color: #e50914;
+    font-size: 1.2rem;
+}
+
+/* --- New Controls & Progress Bar --- */
+.news-bar-wrapper {
+    position: relative;
+    /* Hover to show arrows? Or always visible? Let's make them always visible but subtle */
+}
+
+.slider-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.3s, transform 0.2s;
+    backdrop-filter: blur(4px);
+}
+
+.slider-control:hover {
+    background: rgba(229, 9, 20, 0.8);
+    transform: translateY(-50%) scale(1.1);
+    border-color: #e50914;
+}
+
+.prev-btn { left: 10px; }
+.next-btn { right: 10px; }
+
+.slider-progress-track {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.slider-progress-fill {
+    height: 100%;
+    background: #e50914;
+    width: 0%;
+    transition: width 0.1s linear; /* JS will drive the width */
+    box-shadow: 0 0 10px #e50914;
+}
+
+/* Star Power Slide Styles */
+.person-mini-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.person-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #333;
+}
+.person-info {
+    display: flex;
+    flex-direction: column;
+}
+.person-name { font-weight: 700; color: #fff; font-size: 0.9rem; }
+.person-role { font-size: 0.75rem; color: #888; }
+
+/* Countdown Slide Styles */
+.countdown-digits {
+    font-family: monospace;
+    font-size: 1.5rem;
+    color: #e50914;
+    font-weight: 800;
+    text-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .news-slider-container {
+        flex-direction: column;
+        height: auto;
+        padding: 15px 4%;
+        gap: 15px;
+        padding-bottom: 25px; /* space for progress */
+    }
+    .slider-control {
+        width: 30px; 
+        height: 30px;
+        font-size: 0.8rem;
+    }
+    .news-slider-header {
+        border-right: none;
+        border-bottom: 1px solid #333;
+        width: 100%;
+        padding-bottom: 10px;
+        align-items: flex-start;
+        height: auto;
+    }
+    .bo-grid-premium, .slide-list-premium {
+        flex-direction: column;
+        gap: 10px;
+    }
+    /* Hide visual icon on mobile to save space */
+    .slide-visual-icon {
+        display: none; 
+    }
+    /* Move arrows to overlay nicely or hide them? Keep them overlay */
+}
+
+/* Trailer Slide Specifics (Thumbnails) */
+.trailer-mini-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    /* min-width: 160px;  Let flex handle width naturally or restrict if needed */
+}
+.trailer-mini-item:hover {
+    transform: scale(1.05); 
+}
+.trailer-thumb-box {
+    position: relative;
+    width: 80px;
+    height: 45px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #333;
+    flex-shrink: 0;
+}
+.trailer-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.trailer-thumb-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+}
+.trailer-mini-item:hover .trailer-thumb-overlay {
+    background: rgba(0,0,0,0.1);
+}
+.trailer-info-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
