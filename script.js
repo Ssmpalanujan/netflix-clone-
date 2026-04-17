@@ -146,7 +146,14 @@ const TMDB_KEYS = [
     '4f298a53e552283bee957836a529baec'  // Key 4
 ];
 
+// Memory cache for session
+const movieCache = new Map();
+
 async function fetchMovie(endpoint) {
+    // Check Cache
+    if (movieCache.has(endpoint)) {
+        return movieCache.get(endpoint);
+    }
     // If absolute URL with api_key included, attempt direct fetch
     const isAbsolute = endpoint.startsWith('http://') || endpoint.startsWith('https://');
     if (isAbsolute && endpoint.includes('api_key=')) {
@@ -178,7 +185,11 @@ async function fetchMovie(endpoint) {
             const url = isAbsolute ? endpoint : `${BASE_URL}${finalEndpoint}${urlSeparator}api_key=${key}`;
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Status ${response.status}`);
-            return await response.json();
+            const data = await response.json();
+            
+            // Save to Cache
+            movieCache.set(endpoint, data);
+            return data;
         } catch (error) {
             console.warn(`TMDB Key ${String(key).slice(0,4)}... failed. Trying next.`, error);
             continue;
@@ -252,6 +263,7 @@ function createMovieCard(item, rank = null, allowDelete = false, clickAction = n
     const img = document.createElement('img');
     img.src = item.poster_path ? `${IMG_URL}${item.poster_path}` : 'https://via.placeholder.com/300x450?text=No+Poster';
     img.alt = item.title || item.name || 'Untitled';
+    img.loading = 'lazy';
 
     if (item.media_type === 'tv' || item.first_air_date) {
         const badge = document.createElement('span');
@@ -1196,23 +1208,43 @@ let currentTrailerKey = null;
 window.currentMovieObj = null;
 
 async function loadDetailsPage() {
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location.search || window.location.hash.split('?')[1]);
     const movieId = urlParams.get('id');
     const type = urlParams.get('type') || 'movie';
 
-    if (!movieId) { window.location.href = 'index.html'; return; }
-    currentId = movieId;
-    currentType = type;
+    if (!movieId) { 
+        // Try fallback from hash if needed
+        const hashId = window.location.hash.match(/id=([^&]+)/);
+        if (hashId) {
+             currentId = hashId[1];
+             currentType = window.location.hash.match(/type=([^&]+)/)?.[1] || 'movie';
+        } else {
+             window.location.href = 'index.html'; 
+             return; 
+        }
+    } else {
+        currentId = movieId;
+        currentType = type;
+    }
 
-    const details = await fetchMovie(`/${type}/${movieId}?language=en-US`);
-    const videos = await fetchMovie(`/${type}/${movieId}/videos?language=en-US`);
-    const credits = await fetchMovie(`/${type}/${movieId}/credits`);
-    const similar = await fetchMovie(`/${type}/${movieId}/similar?language=en-US`);
-    const reviews = await fetchMovie(`/${type}/${movieId}/reviews?language=en-US`);
-    const images = await fetchMovie(`/${type}/${movieId}/images`);
-
-    displayUnifiedDetails(details, videos, credits, similar, reviews, images);
+    // 1. Fetch Basic Details immediately
+    const details = await fetchMovie(`/${currentType}/${currentId}?language=en-US`);
+    
+    // 2. Show basic content ASAP for better perceived performance
+    displayUnifiedDetails(details, null, null, null, null, null);
     updateMyListBtn();
+
+    // 3. Chain remaining requests in parallel
+    Promise.allSettled([
+        fetchMovie(`/${currentType}/${currentId}/videos?language=en-US`),
+        fetchMovie(`/${currentType}/${currentId}/credits`),
+        fetchMovie(`/${currentType}/${currentId}/similar?language=en-US`),
+        fetchMovie(`/${currentType}/${currentId}/reviews?language=en-US`),
+        fetchMovie(`/${currentType}/${currentId}/images`)
+    ]).then(results => {
+        const [videos, credits, similar, reviews, images] = results.map(r => r.status === 'fulfilled' ? r.value : null);
+        displayUnifiedDetails(details, videos, credits, similar, reviews, images);
+    });
 }
 
 function displayUnifiedDetails(details, videos, credits, similar, reviews, images) {
@@ -1808,9 +1840,11 @@ async function loadTrendingPeople() {
             return stars;
         };
 
-        const tamilStars = await getStarsFromLang('ta');
-        const teluguStars = await getStarsFromLang('te');
-        const hindiStars = await getStarsFromLang('hi');
+        const [tamilStars, teluguStars, hindiStars] = await Promise.all([
+            getStarsFromLang('ta'),
+            getStarsFromLang('te'),
+            getStarsFromLang('hi')
+        ]);
 
         people = [...people, ...tamilStars, ...teluguStars, ...hindiStars];
         const dedup = Array.from(new Map((people || []).map(p => [p.id, p])).values());
@@ -1836,30 +1870,35 @@ async function loadTrendingPeople() {
    --------------------------- */
 
 async function loadMoviesPage() {
-    const trending = await fetchMovie(requests.fetchTrending);
-    const heroItem = (trending && trending.results) ? trending.results[0] : mockMovies[0];
-    setHero(heroItem);
+    fetchMovie(requests.fetchTrending).then(trending => {
+        const heroItem = (trending && trending.results) ? trending.results[0] : mockMovies[0];
+        setHero(heroItem);
+    });
 
-    await fetchAndRow(requests.fetchAction, 'actionMoviesRow', 'movie');
-    await fetchAndRow(`/discover/movie?with_original_language=ta&sort_by=popularity.desc`, 'tamilMoviesRow', 'movie');
-    await fetchAndRow(requests.fetchComedy, 'comedyMoviesRow', 'movie');
-    await fetchAndRow(requests.fetchSciFi, 'scifiMoviesRow', 'movie');
-    await fetchAndRow(requests.fetchThriller, 'thrillerMoviesRow', 'movie');
-    await fetchAndRow(requests.fetchAnimation, 'animationMoviesRow', 'movie');
+    Promise.allSettled([
+        fetchAndRow(requests.fetchAction, 'actionMoviesRow', 'movie'),
+        fetchAndRow(`/discover/movie?with_original_language=ta&sort_by=popularity.desc`, 'tamilMoviesRow', 'movie'),
+        fetchAndRow(requests.fetchComedy, 'comedyMoviesRow', 'movie'),
+        fetchAndRow(requests.fetchSciFi, 'scifiMoviesRow', 'movie'),
+        fetchAndRow(requests.fetchThriller, 'thrillerMoviesRow', 'movie'),
+        fetchAndRow(requests.fetchAnimation, 'animationMoviesRow', 'movie')
+    ]);
 }
 
 async function loadTVPage() {
-    const trending = await fetchMovie(requests.fetchTrendingTV);
-    const heroItem = (trending && trending.results) ? trending.results[0] : mockMovies[1];
-    setHero(heroItem);
+    fetchMovie(requests.fetchTrendingTV).then(trending => {
+        const heroItem = (trending && trending.results) ? trending.results[0] : mockMovies[1];
+        setHero(heroItem);
+    });
 
-    await fetchAndRow(requests.fetchTrendingTV, 'trendingTVRow', 'tv');
-    await fetchAndRow(requests.fetchTopRatedTV, 'topRatedTVRow', 'tv');
-    await fetchAndRow(requests.fetchCrimeTV, 'crimeTVRow', 'tv');
-    await fetchAndRow(requests.fetchComedyTV, 'comedyTVRow', 'tv');
-
-    await fetchAndRow(requests.fetchTamilTV, 'tamilTVRow', 'tv');
-    await fetchAndRow(requests.fetchTamilReality, 'tamilRealityRow', 'tv');
+    Promise.allSettled([
+        fetchAndRow(requests.fetchTrendingTV, 'trendingTVRow', 'tv'),
+        fetchAndRow(requests.fetchTopRatedTV, 'topRatedTVRow', 'tv'),
+        fetchAndRow(requests.fetchCrimeTV, 'crimeTVRow', 'tv'),
+        fetchAndRow(requests.fetchComedyTV, 'comedyTVRow', 'tv'),
+        fetchAndRow(requests.fetchTamilTV, 'tamilTVRow', 'tv'),
+        fetchAndRow(requests.fetchTamilReality, 'tamilRealityRow', 'tv')
+    ]);
 }
 
 async function loadAppleTVPage() {
@@ -3213,8 +3252,8 @@ function setupFAQ() {
 async function loadHomePage() {
     loadMyListPreview();
     loadContinueWatching();
-    await loadBecauseYouWatched();
-    await loadTrendingPeople();
+    loadBecauseYouWatched();
+    loadTrendingPeople();
 
     try {
         const [trending, tamilHits] = await Promise.all([ fetchMovie(requests.fetchTrending), fetchMovie(requests.fetchTamilAction) ]);
@@ -3255,8 +3294,9 @@ async function loadHomePage() {
         const uniquePool = Array.from(new Map(pool.map(item => [item.id, item])).values());
 
         // 6. Verify Videos for Top Candidates (Strict Mode)
-        // Check top 60 newest items
-        const candidates = uniquePool.slice(0, 60);
+        // Optimization: Reduce candidates significantly to avoid rate limiting and slowness
+        const candidates = uniquePool.slice(0, 10); 
+
         const verification = await Promise.all(candidates.map(async (item) => {
             try {
                 let vData = item.videos; 
@@ -3805,32 +3845,33 @@ if(window.location.pathname.includes('suggestions.html')) {
 document.addEventListener('DOMContentLoaded', () => {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const navLinks = document.querySelector('.nav-links');
-    const navItems = document.querySelectorAll('.nav-links a');
+    
+    // Add a close button to the mobile menu if it doesn't have one
+    if (navLinks && !document.getElementById('closeMobileMenu')) {
+        const closeBtn = document.createElement('div');
+        closeBtn.id = 'closeMobileMenu';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.style.cssText = 'position:absolute; top:20px; right:25px; font-size:40px; color:white; cursor:pointer;';
+        closeBtn.onclick = () => navLinks.classList.remove('active');
+        navLinks.appendChild(closeBtn);
+    }
 
     if (mobileMenuBtn && navLinks) {
         mobileMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             navLinks.classList.toggle('active');
-            mobileMenuBtn.querySelector('i').classList.toggle('fa-bars');
-            mobileMenuBtn.querySelector('i').classList.toggle('fa-times');
         });
 
-        // Close menu when clicking outside
+        // Close when clicking links
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => navLinks.classList.remove('active'));
+        });
+
+        // Close when clicking outside
         document.addEventListener('click', (e) => {
             if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && e.target !== mobileMenuBtn) {
                 navLinks.classList.remove('active');
-                mobileMenuBtn.querySelector('i').classList.add('fa-bars');
-                mobileMenuBtn.querySelector('i').classList.remove('fa-times');
             }
-        });
-
-        // Close menu when clicking a link
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                mobileMenuBtn.querySelector('i').classList.add('fa-bars');
-                mobileMenuBtn.querySelector('i').classList.remove('fa-times');
-            });
         });
     }
 });

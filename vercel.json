@@ -15,7 +15,7 @@
       "src": "*.js",
       "use": "@vercel/static"
     }
-  ]
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/$1" }
   ]
